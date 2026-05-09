@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle, ActivityIndicator, View } from 'react-native';
 import { theme } from '../../theme';
 
 interface SecondaryButtonProps {
@@ -9,6 +9,7 @@ interface SecondaryButtonProps {
   textStyle?: TextStyle;
   disabled?: boolean;
   loading?: boolean;
+  leftIcon?: React.ReactNode;
 }
 
 export const SecondaryButton: React.FC<SecondaryButtonProps> = ({
@@ -18,6 +19,7 @@ export const SecondaryButton: React.FC<SecondaryButtonProps> = ({
   textStyle,
   disabled = false,
   loading = false,
+  leftIcon,
 }) => {
   return (
     <TouchableOpacity
@@ -34,7 +36,10 @@ export const SecondaryButton: React.FC<SecondaryButtonProps> = ({
       {loading ? (
         <ActivityIndicator color={theme.colors.text.secondary} />
       ) : (
-        <Text style={[styles.text, textStyle]}>{title}</Text>
+        <View style={styles.contentContainer}>
+          {leftIcon && <View style={styles.iconContainer}>{leftIcon}</View>}
+          <Text style={[styles.text, textStyle]}>{title}</Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -59,5 +64,13 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.sizes.bodyLarge,
     fontWeight: theme.typography.weights.medium,
     fontFamily: theme.typography.family.primary,
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconContainer: {
+    marginRight: theme.spacing.sm,
   },
 });

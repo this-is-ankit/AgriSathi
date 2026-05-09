@@ -22,6 +22,10 @@ export type AuthStackParamList = {
 export type RootStackParamList = {
   MainTabs: undefined;
   Permissions: undefined;
+  Camera: undefined;
+  ImagePreview: { uri: string };
+  Analyzing: undefined;
+  ScanResult: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = 

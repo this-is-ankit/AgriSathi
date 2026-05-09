@@ -9,6 +9,11 @@ import { AuthNavigator } from './AuthNavigator';
 import { PermissionsScreen } from '../screens/PermissionsScreen';
 import BottomTabs from './BottomTabs';
 
+import { CameraScreen } from '../screens/CameraScreen';
+import { ImagePreviewScreen } from '../screens/ImagePreviewScreen';
+import { AnalyzingScreen } from '../screens/AnalyzingScreen';
+import { ResultScreen } from '../screens/ResultScreen';
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export const RootNavigator = () => {
@@ -29,7 +34,29 @@ export const RootNavigator = () => {
       {!hasCompletedOnboarding ? (
         <Stack.Screen name="Permissions" component={PermissionsScreen} />
       ) : (
-        <Stack.Screen name="MainTabs" component={BottomTabs} />
+        <>
+          <Stack.Screen name="MainTabs" component={BottomTabs} />
+          <Stack.Screen 
+            name="Camera" 
+            component={CameraScreen} 
+            options={{ animation: 'fade' }} 
+          />
+          <Stack.Screen 
+            name="ImagePreview" 
+            component={ImagePreviewScreen} 
+            options={{ animation: 'fade' }} 
+          />
+          <Stack.Screen 
+            name="Analyzing" 
+            component={AnalyzingScreen} 
+            options={{ animation: 'fade' }} 
+          />
+          <Stack.Screen 
+            name="ScanResult" 
+            component={ResultScreen} 
+            options={{ animation: 'slide_from_bottom' }} 
+          />
+        </>
       )}
     </Stack.Navigator>
   );
