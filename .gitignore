@@ -1,0 +1,21 @@
+# Node
+node_modules/
+
+# Python
+venv/
+__pycache__/
+
+# Environment
+.env
+
+# React Native
+android/.gradle/
+android/build/
+ios/build/
+
+# Logs
+*.log
+logs/
+
+# Misc
+.DS_Store
