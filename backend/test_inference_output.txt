@@ -1,0 +1,1 @@
+SUCCESS: [{'label': 'Corn (Maize) with Common Rust', 'score': 0.4397074282169342}, {'label': 'Squash with Powdery Mildew', 'score': 0.12279834598302841}, {'label': 'Healthy Tomato Plant', 'score': 0.04846639558672905}, {'label': 'Corn (Maize) with Cercospora and Gray Leaf Spot', 'score': 0.04181879758834839}, {'label': 'Tomato Mosaic Virus', 'score': 0.022857563570141792}]

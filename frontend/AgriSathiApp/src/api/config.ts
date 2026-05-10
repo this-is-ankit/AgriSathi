@@ -11,6 +11,6 @@ export const ENDPOINTS = {
     login: '/api/v1/auth/login',
   },
   prediction: {
-    scan: '/api/v1/predict',
+    scan: '/api/v1/predict/scan',
   },
 };
