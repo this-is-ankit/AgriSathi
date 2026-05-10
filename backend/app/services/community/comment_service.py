@@ -6,7 +6,7 @@ from app.database.mongodb import db_client
 from app.schemas.community import Comment
 from app.core.logger import log
 
-def get_comments(post_id: str, page: int = 1, limit: int = 20) -> List[Comment]:
+async def get_comments(post_id: str, page: int = 1, limit: int = 20) -> List[Comment]:
     if db_client.db is None:
         return []
         
@@ -17,18 +17,19 @@ def get_comments(post_id: str, page: int = 1, limit: int = 20) -> List[Comment]:
         .limit(limit)
         
     comments = []
-    for doc in cursor:
+    docs = await cursor.to_list(length=limit)
+    for doc in docs:
         doc["_id"] = str(doc["_id"])
         comments.append(Comment(**doc))
         
     return comments
 
-def create_comment(post_id: str, comment_text: str, user_id: str, user_name: str) -> Comment:
+async def create_comment(post_id: str, comment_text: str, user_id: str, user_name: str) -> Comment:
     if db_client.db is None:
         raise HTTPException(status_code=503, detail="Database unavailable")
         
     # Check if post exists
-    post = db_client.db["community_posts"].find_one({"_id": post_id})
+    post = await db_client.db["community_posts"].find_one({"_id": post_id})
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
         
@@ -44,10 +45,10 @@ def create_comment(post_id: str, comment_text: str, user_id: str, user_name: str
         "is_deleted": False
     }
     
-    db_client.db["comments"].insert_one(doc)
+    await db_client.db["comments"].insert_one(doc)
     
-    # Increment comment count asynchronously ideally, but doing it here directly for simplicity
-    db_client.db["community_posts"].update_one(
+    # Increment comment count
+    await db_client.db["community_posts"].update_one(
         {"_id": post_id},
         {"$inc": {"comment_count": 1}}
     )

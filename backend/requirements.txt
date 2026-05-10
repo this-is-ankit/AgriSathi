@@ -15,7 +15,8 @@ cuda-toolkit==13.0.2
 dnspython==2.8.0
 fastapi==0.136.1
 filelock==3.29.0
-firebase_admin==7.4.0
+firebase-admin==7.4.0
+motor==3.7.1
 flake8==7.3.0
 fsspec==2026.4.0
 google-api-core==2.30.3

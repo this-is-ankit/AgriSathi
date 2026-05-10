@@ -19,7 +19,7 @@ async def scan_crop(image: UploadFile = File(...)):
     result = await run_inference(image_bytes)
     
     # Save prediction history to MongoDB
-    save_prediction_history(result)
+    await save_prediction_history(result)
     
     return SuccessResponse(
         message="Scan completed successfully",

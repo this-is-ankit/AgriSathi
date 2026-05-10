@@ -13,7 +13,7 @@ async def lifespan(app: FastAPI):
     # Startup actions
     setup_logging()
     log.info(f"Starting {settings.PROJECT_NAME} API v{settings.VERSION}")
-    startup_databases()
+    await startup_databases()
     yield
     # Shutdown actions
     log.info(f"Shutting down {settings.PROJECT_NAME} API")

@@ -6,7 +6,7 @@ from app.database.mongodb import db_client
 from app.schemas.community import CommunityPost, CommunityPostCreate
 from app.core.logger import log
 
-def get_feed(page: int = 1, limit: int = 10) -> Tuple[List[CommunityPost], bool]:
+async def get_feed(page: int = 1, limit: int = 10) -> Tuple[List[CommunityPost], bool]:
     if db_client.db is None:
         log.warning("MongoDB not connected. Returning empty feed.")
         return [], False
@@ -17,7 +17,7 @@ def get_feed(page: int = 1, limit: int = 10) -> Tuple[List[CommunityPost], bool]
         .skip(skip) \
         .limit(limit + 1)
         
-    posts_data = list(cursor)
+    posts_data = await cursor.to_list(length=limit + 1)
     
     has_more = len(posts_data) > limit
     if has_more:
@@ -31,7 +31,7 @@ def get_feed(page: int = 1, limit: int = 10) -> Tuple[List[CommunityPost], bool]
         
     return posts, has_more
 
-def create_post(
+async def create_post(
     caption: str, 
     tags: List[str], 
     user_id: str, 
@@ -58,6 +58,6 @@ def create_post(
         "is_deleted": False
     }
     
-    db_client.db["community_posts"].insert_one(doc)
+    await db_client.db["community_posts"].insert_one(doc)
     
     return CommunityPost(**doc)

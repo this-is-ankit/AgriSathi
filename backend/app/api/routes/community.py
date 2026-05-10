@@ -2,13 +2,13 @@ from fastapi import APIRouter, Query, Body, Depends, Form, UploadFile
 from app.schemas.common import SuccessResponse
 from app.schemas.community import CommunityPost, CommunityPostCreate, CommentCreate, Comment, FeedResponse
 from app.services.community import post_service, comment_service, moderation_service
-from typing import List
+from typing import List, Optional
 
 router = APIRouter()
 
 @router.get("/feed", response_model=SuccessResponse[FeedResponse])
 async def get_feed(page: int = Query(1), limit: int = Query(10)):
-    posts, has_more = post_service.get_feed(page, limit)
+    posts, has_more = await post_service.get_feed(page, limit)
     return SuccessResponse(
         message="Feed retrieved successfully",
         data=FeedResponse(posts=posts, page=page, has_more=has_more)
@@ -18,7 +18,7 @@ async def get_feed(page: int = Query(1), limit: int = Query(10)):
 async def create_post(
     caption: str = Form(...),
     tags: str = Form("[]"),
-    image: UploadFile = None
+    image: Optional[UploadFile] = None
 ):
     moderation_service.validate_post_content(caption)
     
@@ -38,7 +38,7 @@ async def create_post(
     user_id = "user_123"
     user_name = "Farmer Ankit"
     
-    new_post = post_service.create_post(
+    new_post = await post_service.create_post(
         caption=caption,
         tags=tags_list,
         user_id=user_id,
@@ -54,7 +54,7 @@ async def create_post(
 
 @router.get("/comments/{post_id}", response_model=SuccessResponse[List[Comment]])
 async def get_comments(post_id: str, page: int = Query(1)):
-    comments = comment_service.get_comments(post_id, page=page)
+    comments = await comment_service.get_comments(post_id, page=page)
     return SuccessResponse(
         message="Comments retrieved successfully",
         data=comments
@@ -67,7 +67,7 @@ async def create_comment(comment_req: CommentCreate = Body(...)):
     user_id = "user_123"
     user_name = "Farmer Ankit"
     
-    new_comment = comment_service.create_comment(
+    new_comment = await comment_service.create_comment(
         post_id=comment_req.post_id,
         comment_text=comment_req.comment,
         user_id=user_id,

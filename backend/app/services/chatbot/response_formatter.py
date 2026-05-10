@@ -1,5 +1,5 @@
 import re
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 def extract_suggestions(text: str) -> Tuple[str, List[str]]:
     """
@@ -22,7 +22,7 @@ def extract_suggestions(text: str) -> Tuple[str, List[str]]:
         
     return text, suggestions
 
-def generate_default_suggestions(context_type: str = None) -> List[str]:
+def generate_default_suggestions(context_type: Optional[str] = None) -> List[str]:
     if context_type == "disease_scan":
         return ["How do I treat this?", "What fertilizer is safe?", "Can it spread?"]
     elif context_type == "weather_alert":

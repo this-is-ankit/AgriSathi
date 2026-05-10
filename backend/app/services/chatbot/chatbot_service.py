@@ -8,13 +8,13 @@ from app.schemas.chatbot import ChatMessage, ChatResponse
 from app.services.chatbot.prompt_builder import build_system_prompt, format_context
 from app.services.chatbot.response_formatter import extract_suggestions, generate_default_suggestions
 from app.core.logger import log
-from litellm import completion
+from litellm import acompletion
 
-def generate_reply(user_id: str, message: str, context_type: Optional[str] = None, context_data: Optional[dict] = None) -> ChatResponse:
+async def generate_reply(user_id: str, message: str, context_type: Optional[str] = None, context_data: Optional[dict] = None) -> ChatResponse:
     # 1. Fetch recent chat history
     history = []
     if db_client.db is not None:
-        chat_doc = db_client.db["chatbot_history"].find_one({"user_id": user_id})
+        chat_doc = await db_client.db["chatbot_history"].find_one({"user_id": user_id})
         if chat_doc and "messages" in chat_doc:
             # Get last 10 messages for context
             history = chat_doc["messages"][-10:]
@@ -30,20 +30,20 @@ def generate_reply(user_id: str, message: str, context_type: Optional[str] = Non
         
     messages.append({"role": "user", "content": message})
     
-    # 3. Call LLM (using litellm as an abstraction, defaults to gemini if key exists, else mock)
+    # 3. Call LLM
     try:
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             log.warning("GEMINI_API_KEY not found, using mocked chatbot response")
             reply_text = "I am a mocked AgriSathi assistant. Please configure an API key for full AI capabilities.\nTo help with your crops, ensure proper irrigation and monitor for pests."
         else:
-            response = completion(
+            response = await acompletion(
                 model="gemini/gemini-1.5-flash",
                 messages=messages,
                 api_key=api_key,
                 max_tokens=300
             )
-            reply_text = response.choices[0].message.content
+            reply_text = str(response.choices[0].message.content) # type: ignore
     except Exception as e:
         log.error(f"Chatbot inference failed: {e}")
         reply_text = "I'm sorry, I'm having trouble connecting to my agricultural database right now. Please try again later."
@@ -53,13 +53,13 @@ def generate_reply(user_id: str, message: str, context_type: Optional[str] = Non
     if not suggestions:
         suggestions = generate_default_suggestions(context_type)
         
-    # 5. Save history asynchronously (synchronously here for simplicity)
-    save_message_to_history(user_id, "user", message)
-    save_message_to_history(user_id, "assistant", clean_text)
+    # 5. Save history asynchronously
+    await save_message_to_history(user_id, "user", message)
+    await save_message_to_history(user_id, "assistant", clean_text)
     
     return ChatResponse(reply=clean_text, suggestions=suggestions)
 
-def save_message_to_history(user_id: str, role: str, content: str):
+async def save_message_to_history(user_id: str, role: str, content: str):
     if db_client.db is None:
         return
         
@@ -69,7 +69,7 @@ def save_message_to_history(user_id: str, role: str, content: str):
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
     
-    db_client.db["chatbot_history"].update_one(
+    await db_client.db["chatbot_history"].update_one(
         {"user_id": user_id},
         {
             "$push": {"messages": msg},

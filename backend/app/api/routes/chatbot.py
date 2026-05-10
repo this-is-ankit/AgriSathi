@@ -11,7 +11,7 @@ router = APIRouter()
 async def send_message(req: ChatRequest = Body(...)):
     user_id = "user_123" # Mock auth
     
-    response = generate_reply(
+    response = await generate_reply(
         user_id=user_id,
         message=req.message,
         context_type=req.context_type,
@@ -29,7 +29,7 @@ async def get_history(limit: int = Query(50)):
     
     messages = []
     if db_client.db is not None:
-        chat_doc = db_client.db["chatbot_history"].find_one({"user_id": user_id})
+        chat_doc = await db_client.db["chatbot_history"].find_one({"user_id": user_id})
         if chat_doc and "messages" in chat_doc:
             messages = chat_doc["messages"][-limit:]
             

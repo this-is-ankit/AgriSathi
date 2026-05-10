@@ -10,7 +10,9 @@ RULES:
 5. If the user provides context (like a recent disease scan or weather alert), use it to tailor your response.
 """
 
-def format_context(context_type: str, context_data: dict) -> str:
+from typing import Optional, Dict, Any
+
+def format_context(context_type: Optional[str], context_data: Optional[Dict[str, Any]]) -> str:
     if not context_type or not context_data:
         return ""
         
