@@ -56,7 +56,7 @@ export const AnalyzingScreen = () => {
             navigation.goBack();
           }
         }
-      } catch (error) {
+      } catch {
         if (isMounted) {
           useScanStore.getState().setError('Network error: Unable to reach the AI servers.');
           navigation.goBack();

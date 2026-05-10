@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.routes import auth, prediction, weather, community, chatbot
+from app.api.routes import auth, prediction, weather, community, chatbot, notifications
 
 api_router = APIRouter()
 
@@ -8,3 +8,4 @@ api_router.include_router(prediction.router, prefix="/predict", tags=["Predictio
 api_router.include_router(weather.router, prefix="/weather", tags=["Weather"])
 api_router.include_router(community.router, prefix="/community", tags=["Community"])
 api_router.include_router(chatbot.router, prefix="/chatbot", tags=["Chatbot"])
+api_router.include_router(notifications.router, prefix="/notifications", tags=["notifications"])

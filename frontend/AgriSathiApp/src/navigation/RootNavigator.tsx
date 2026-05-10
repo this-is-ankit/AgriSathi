@@ -13,6 +13,9 @@ import { CameraScreen } from '../screens/CameraScreen';
 import { ImagePreviewScreen } from '../screens/ImagePreviewScreen';
 import { AnalyzingScreen } from '../screens/AnalyzingScreen';
 import { ResultScreen } from '../screens/ResultScreen';
+import { CreatePostScreen } from '../screens/CreatePostScreen';
+import { ChatbotScreen } from '../screens/ChatbotScreen';
+import { SettingsScreen } from '../screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -55,6 +58,21 @@ export const RootNavigator = () => {
             name="ScanResult" 
             component={ResultScreen} 
             options={{ animation: 'slide_from_bottom' }} 
+          />
+          <Stack.Screen 
+            name="CreatePost" 
+            component={CreatePostScreen} 
+            options={{ animation: 'slide_from_bottom' }} 
+          />
+          <Stack.Screen 
+            name="Chatbot" 
+            component={ChatbotScreen} 
+            options={{ animation: 'slide_from_bottom' }} 
+          />
+          <Stack.Screen 
+            name="Settings" 
+            component={SettingsScreen} 
+            options={{ animation: 'slide_from_right' }} 
           />
         </>
       )}

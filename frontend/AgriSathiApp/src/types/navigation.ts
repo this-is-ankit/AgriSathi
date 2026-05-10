@@ -26,6 +26,9 @@ export type RootStackParamList = {
   ImagePreview: { uri: string };
   Analyzing: undefined;
   ScanResult: undefined;
+  CreatePost: undefined;
+  Chatbot: undefined;
+  Settings: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = 

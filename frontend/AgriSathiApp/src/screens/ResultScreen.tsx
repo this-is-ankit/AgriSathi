@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CheckCircle, AlertTriangle } from 'lucide-react-native';
+import { CheckCircle, AlertTriangle, MessageCircle } from 'lucide-react-native';
 
 import { ScrollContainer } from '../components/layout/ScrollContainer';
 import { ScreenHeader } from '../components/layout/ScreenHeader';
@@ -75,7 +75,16 @@ export const ResultScreen = () => {
       )}
 
       <Section noPadding style={styles.footer}>
-        <PrimaryButton title="Done" onPress={handleDone} />
+        <View style={styles.actionContainer}>
+          <Pressable 
+            style={styles.assistantButton}
+            onPress={() => navigation.navigate('Chatbot')}
+          >
+            <MessageCircle size={20} color={theme.colors.primary} />
+            <BodyText style={styles.assistantText}>Need help? Ask AgriSathi</BodyText>
+          </Pressable>
+          <PrimaryButton title="Done" onPress={handleDone} />
+        </View>
       </Section>
     </ScrollContainer>
   );
@@ -123,5 +132,23 @@ const styles = StyleSheet.create({
   footer: {
     paddingHorizontal: theme.spacing.lg,
     marginTop: theme.spacing.xl,
+  },
+  actionContainer: {
+    gap: theme.spacing.md,
+  },
+  assistantButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.background.primary,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.roundness.md,
+    gap: theme.spacing.sm,
+  },
+  assistantText: {
+    color: theme.colors.primary,
+    fontWeight: '600',
   },
 });

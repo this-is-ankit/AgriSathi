@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
+import { MessageCircle } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
@@ -18,19 +19,19 @@ import { CommunityPreview } from '../components/community/CommunityPreview';
 import { theme } from '../theme';
 
 // Mock data for UI preview
-const MOCK_ALERTS = [
-  { id: '1', title: 'Heavy Rain Expected', description: 'Expected tomorrow evening. Secure your harvested crops.', severity: 'medium' as const },
-];
-
 const MOCK_POSTS = [
   { id: '1', author: 'Ramesh K.', content: 'Has anyone tried the new organic fertilizer from IFFCO?', timeAgo: '2h ago' },
 ];
 
+import { useWeatherStore } from '../store/weatherStore';
+
 const HomeScreen = () => {
   const navigation = useNavigation<BottomTabNavigationProp<any>>();
+  const { advisories } = useWeatherStore();
 
   return (
-    <ScrollContainer edges={['top']} contentContainerStyle={styles.content}>
+    <View style={styles.container}>
+      <ScrollContainer edges={['top']} contentContainerStyle={styles.content}>
       <ScreenHeader title="AgriSathi" />
       
       <View style={styles.greetingSection}>
@@ -48,7 +49,10 @@ const HomeScreen = () => {
       </Section>
 
       <Section title="Weather & Alerts">
-        <AlertPreview alerts={MOCK_ALERTS} />
+        <AlertPreview 
+          alerts={advisories} 
+          onPressAlert={() => navigation.navigate('Alerts')} 
+        />
       </Section>
 
       <Section title="Recent Detections" action={{ label: 'View All', onPress: () => {} }}>
@@ -60,17 +64,44 @@ const HomeScreen = () => {
       </Section>
 
       <Spacer size="xxl" />
-    </ScrollContainer>
+      </ScrollContainer>
+      
+      <Pressable 
+        style={styles.chatbotFab} 
+        onPress={() => (navigation.getParent() as any)?.navigate('Chatbot')}
+      >
+        <MessageCircle color="#fff" size={24} />
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   content: {
     paddingBottom: theme.spacing.xl,
   },
   greetingSection: {
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.md,
+  },
+  chatbotFab: {
+    position: 'absolute',
+    bottom: theme.spacing.xl,
+    right: theme.spacing.xl,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });
 

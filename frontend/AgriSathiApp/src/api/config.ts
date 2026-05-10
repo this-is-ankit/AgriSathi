@@ -13,4 +13,16 @@ export const ENDPOINTS = {
   prediction: {
     scan: '/api/v1/predict/scan',
   },
+  weather: {
+    current: '/api/v1/weather/current',
+  },
+  community: {
+    feed: '/api/v1/community/feed',
+    post: '/api/v1/community/post',
+    comment: '/api/v1/community/comment',
+  },
+  chatbot: {
+    message: '/api/v1/chatbot/message',
+    history: '/api/v1/chatbot/history',
+  },
 };

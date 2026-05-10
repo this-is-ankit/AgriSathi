@@ -27,8 +27,7 @@ export const ImagePreviewScreen = () => {
   const handleAnalyze = async () => {
     setIsProcessing(true);
     // Compress the image before uploading/analyzing
-    const compressedUri = await compressImage(uri);
-    console.log('Compressed Image URI:', compressedUri);
+    await compressImage(uri);
     setIsProcessing(false);
     
     navigation.replace('Analyzing');
